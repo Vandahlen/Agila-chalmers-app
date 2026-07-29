@@ -11,6 +11,8 @@ import { View, StyleSheet } from 'react-native';
 import ChalmersText from './ChalmersText';
 import ChalmersButton from './ChalmersButton';
 import { colors, spacing, radii } from '../theme/theme';
+import { useTheme } from '../theme/ThemeContext';
+import { useI18n } from '../i18n/I18nContext';
 
 export interface EvaluationIntroCardProps {
   onStart: () => void;
@@ -18,37 +20,35 @@ export interface EvaluationIntroCardProps {
   description?: string;
 }
 
-const DEFAULT_DESCRIPTION =
-  'Once a week we ask a few quick questions about how your studies are going. ' +
-  'It takes about a minute, your answers are anonymous, and they help the ' +
-  'student union spot problems early.';
-
 const EvaluationIntroCard: React.FC<EvaluationIntroCardProps> = ({
   onStart,
-  description = DEFAULT_DESCRIPTION,
+  description,
 }) => {
+  const theme = useTheme();
+  const { t } = useI18n();
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: theme.card }]}>
       <ChalmersText variant="heading1" style={styles.title}>
-        Weekly study check-in
+        {t.introTitle}
       </ChalmersText>
 
       <ChalmersText
         variant="paragraph1"
-        color={colors.varmGra}
+        color={theme.subText}
         style={styles.description}
       >
-        {description}
+        {description ?? t.introDescriptionDefault}
       </ChalmersText>
 
-      <View style={styles.anonymityBadge}>
+      <View style={[styles.anonymityBadge, { backgroundColor: theme.badgeBg }]}>
         <ChalmersText variant="caption1" color={colors.gron}>
-          Fully anonymous · no ID attached
+          {t.introBadge}
         </ChalmersText>
       </View>
 
       <ChalmersButton
-        label="Start Evaluation"
+        label={t.introStartButton}
         onPress={onStart}
         variant="primary"
         style={styles.startButton}
@@ -60,7 +60,6 @@ const EvaluationIntroCard: React.FC<EvaluationIntroCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.white,
     borderRadius: radii.card,
     padding: spacing.lg,
   },
@@ -74,7 +73,6 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     marginBottom: spacing.lg,
     alignSelf: 'flex-start',
-    backgroundColor: '#EAF9F1',
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.sm,
     borderRadius: radii.sm,

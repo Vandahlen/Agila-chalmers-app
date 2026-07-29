@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import ChalmersText from './ChalmersText';
 import { colors, radii, spacing } from '../theme/theme';
+import { useTheme } from '../theme/ThemeContext';
 
 export type ChalmersButtonVariant = 'primary' | 'secondary';
 
@@ -39,6 +40,7 @@ const ChalmersButton: React.FC<ChalmersButtonProps> = ({
   testID,
 }) => {
   const isDisabled = disabled || loading;
+  const theme = useTheme();
 
   if (variant === 'secondary') {
     return (
@@ -52,7 +54,7 @@ const ChalmersButton: React.FC<ChalmersButtonProps> = ({
       >
         <ChalmersText
           variant="paragraph1"
-          color={isDisabled ? colors.disabledText : colors.bla}
+          color={isDisabled ? theme.disabledText : colors.bla}
         >
           {label}
         </ChalmersText>
@@ -66,7 +68,7 @@ const ChalmersButton: React.FC<ChalmersButtonProps> = ({
       disabled={isDisabled}
       style={[
         styles.primaryContainer,
-        isDisabled && styles.primaryDisabled,
+        isDisabled && { backgroundColor: theme.disabledBackground },
         style,
       ]}
       testID={testID}
@@ -78,7 +80,7 @@ const ChalmersButton: React.FC<ChalmersButtonProps> = ({
       ) : (
         <ChalmersText
           variant="paragraph1"
-          color={isDisabled ? colors.disabledText : colors.white}
+          color={isDisabled ? theme.disabledText : colors.white}
           style={styles.primaryLabel}
         >
           {label}
@@ -96,9 +98,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  primaryDisabled: {
-    backgroundColor: colors.disabledBackground,
   },
   primaryLabel: {
     fontWeight: '600',

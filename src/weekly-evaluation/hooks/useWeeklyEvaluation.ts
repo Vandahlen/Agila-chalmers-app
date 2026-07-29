@@ -63,11 +63,6 @@ export function useWeeklyEvaluation({
     : undefined;
   const canProceed = !!currentAnswer;
 
-  const progressLabel = useMemo(() => {
-    if (questions.length === 0) return '';
-    return `Question ${currentStep + 1} of ${questions.length}`;
-  }, [currentStep, questions.length]);
-
   const progressRatio = useMemo(() => {
     if (questions.length === 0) return 0;
     return (currentStep + 1) / questions.length;
@@ -124,7 +119,8 @@ export function useWeeklyEvaluation({
     isLastStep,
     currentAnswer,
     canProceed,
-    progressLabel,
+    currentStepNumber: currentStep + 1,
+    totalSteps: questions.length,
     progressRatio,
     submitState,
     setAnswer,

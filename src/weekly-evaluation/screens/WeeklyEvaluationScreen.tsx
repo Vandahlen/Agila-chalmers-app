@@ -19,6 +19,8 @@ import ChalmersText from '../components/ChalmersText';
 import ChalmersButton from '../components/ChalmersButton';
 import QuestionInput from '../components/QuestionInput';
 import { colors, spacing } from '../theme/theme';
+import { useTheme } from '../theme/ThemeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { IEvaluationRepository } from '../types/evaluation';
 import { useWeeklyEvaluation, StudentContext } from '../hooks/useWeeklyEvaluation';
 
@@ -43,6 +45,8 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
   onEvaluationFinished,
   onCancel,
 }) => {
+  const theme = useTheme();
+  const { t } = useI18n();
   const {
     loadState,
     questions,
@@ -50,7 +54,8 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
     isLastStep,
     currentAnswer,
     canProceed,
-    progressLabel,
+    currentStepNumber,
+    totalSteps,
     progressRatio,
     submitState,
     setAnswer,
@@ -73,7 +78,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   if (loadState === 'loading') {
     return (
-      <View style={styles.centered}>
+      <View style={[styles.centered, { backgroundColor: theme.background }]}>
         <ActivityIndicator color={colors.bla} size="large" />
       </View>
     );
@@ -81,12 +86,12 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   if (loadState === 'error') {
     return (
-      <View style={styles.centered}>
+      <View style={[styles.centered, { backgroundColor: theme.background }]}>
         <ChalmersText variant="paragraph1" color={colors.rod}>
-          Couldn't load this week's questions.
+          {t.surveyLoadError}
         </ChalmersText>
         <ChalmersButton
-          label="Try again"
+          label={t.surveyTryAgain}
           onPress={reload}
           variant="secondary"
           style={styles.retryButton}
@@ -97,9 +102,9 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   if (questions.length === 0) {
     return (
-      <View style={styles.centered}>
-        <ChalmersText variant="paragraph1" color={colors.varmGra}>
-          No evaluation questions are available right now.
+      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+        <ChalmersText variant="paragraph1" color={theme.subText}>
+          {t.surveyEmpty}
         </ChalmersText>
       </View>
     );
@@ -107,14 +112,14 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   return (
     <ScrollView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
       contentContainerStyle={styles.content}
     >
-      <ChalmersText variant="subheading1" color={colors.varmGra}>
-        {progressLabel}
+      <ChalmersText variant="subheading1" color={theme.subText}>
+        {t.surveyProgress(currentStepNumber, totalSteps)}
       </ChalmersText>
 
-      <View style={styles.progressTrack}>
+      <View style={[styles.progressTrack, { backgroundColor: theme.border }]}>
         <View
           style={[styles.progressFill, { width: `${progressRatio * 100}%` }]}
         />
@@ -127,7 +132,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
       {currentQuestion.helper_text && (
         <ChalmersText
           variant="paragraph2"
-          color={colors.varmGra}
+          color={theme.subText}
           style={styles.helperText}
         >
           {currentQuestion.helper_text}
@@ -142,18 +147,18 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
       {submitState === 'error' && (
         <ChalmersText variant="caption1" color={colors.rod} style={styles.submitError}>
-          Something went wrong submitting your answers. Please try again.
+          {t.surveySubmitError}
         </ChalmersText>
       )}
 
       <View style={styles.footer}>
         <ChalmersButton
-          label="Back"
+          label={t.surveyBack}
           onPress={() => goBack(onCancel)}
           variant="secondary"
         />
         <ChalmersButton
-          label={isLastStep ? 'Submit' : 'Next'}
+          label={isLastStep ? t.surveySubmit : t.surveyNext}
           onPress={handleGoNext}
           variant="primary"
           disabled={!canProceed}
@@ -168,7 +173,6 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
   },
   content: {
     padding: spacing.lg,
@@ -186,7 +190,6 @@ const styles = StyleSheet.create({
   progressTrack: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: colors.disabledBackground,
     marginTop: spacing.xs,
     marginBottom: spacing.lg,
     overflow: 'hidden',

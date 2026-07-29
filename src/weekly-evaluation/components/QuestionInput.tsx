@@ -9,6 +9,8 @@ import React from 'react';
 import { Pressable, StyleSheet, TextInput, View, Vibration } from 'react-native';
 import ChalmersText from './ChalmersText';
 import { colors, radii, spacing } from '../theme/theme';
+import { useTheme } from '../theme/ThemeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { Question } from '../types/evaluation';
 
 export interface QuestionInputProps {
@@ -24,6 +26,9 @@ const QuestionInput: React.FC<QuestionInputProps> = ({
   value,
   onChange,
 }) => {
+  const theme = useTheme();
+  const { t } = useI18n();
+
   const handleSelect = (next: string | number) => {
     Vibration.vibrate(SELECTION_HAPTIC_MS);
     onChange(next);
@@ -42,13 +47,17 @@ const QuestionInput: React.FC<QuestionInputProps> = ({
             <Pressable
               key={n}
               onPress={() => handleSelect(n)}
-              style={[styles.scalePill, selected && styles.scalePillSelected]}
+              style={[
+                styles.scalePill,
+                { borderColor: theme.border },
+                selected && { backgroundColor: colors.bla, borderColor: colors.bla },
+              ]}
               accessibilityRole="button"
               accessibilityState={{ selected }}
             >
               <ChalmersText
                 variant="paragraph1"
-                color={selected ? colors.white : colors.black}
+                color={selected ? colors.white : theme.text}
               >
                 {n}
               </ChalmersText>
@@ -68,13 +77,17 @@ const QuestionInput: React.FC<QuestionInputProps> = ({
             <Pressable
               key={option}
               onPress={() => handleSelect(option)}
-              style={[styles.choiceRow, selected && styles.choiceRowSelected]}
+              style={[
+                styles.choiceRow,
+                { borderColor: theme.border },
+                selected && { borderColor: colors.bla, backgroundColor: theme.selectedTint },
+              ]}
               accessibilityRole="button"
               accessibilityState={{ selected }}
             >
               <ChalmersText
                 variant="paragraph1"
-                color={selected ? colors.bla : colors.black}
+                color={selected ? colors.bla : theme.text}
               >
                 {option}
               </ChalmersText>
@@ -87,13 +100,16 @@ const QuestionInput: React.FC<QuestionInputProps> = ({
 
   return (
     <TextInput
-      style={styles.textInput}
+      style={[
+        styles.textInput,
+        { borderColor: theme.border, backgroundColor: theme.inputBg, color: theme.text },
+      ]}
       value={typeof value === 'string' ? value : ''}
       onChangeText={onChange}
-      placeholder="Type your answer"
-      placeholderTextColor={colors.disabledText}
+      placeholder={t.surveyTextPlaceholder}
+      placeholderTextColor={theme.subText}
       multiline
-      accessibilityLabel="Free-text answer"
+      accessibilityLabel={t.surveyTextAccessibilityLabel}
     />
   );
 };
@@ -109,13 +125,8 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: radii.pill,
     borderWidth: 1,
-    borderColor: colors.disabledBackground,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  scalePillSelected: {
-    backgroundColor: colors.bla,
-    borderColor: colors.bla,
   },
   choiceList: {
     marginTop: spacing.lg,
@@ -125,23 +136,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     borderRadius: radii.sm,
     borderWidth: 1,
-    borderColor: colors.disabledBackground,
     marginBottom: spacing.sm,
-  },
-  choiceRowSelected: {
-    borderColor: colors.bla,
-    backgroundColor: '#EAF7FF',
   },
   textInput: {
     marginTop: spacing.lg,
     minHeight: 96,
     borderWidth: 1,
-    borderColor: colors.disabledBackground,
     borderRadius: radii.sm,
     padding: spacing.md,
     textAlignVertical: 'top',
     fontSize: 16,
-    color: colors.black,
   },
 });
 

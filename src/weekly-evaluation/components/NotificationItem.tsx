@@ -11,6 +11,8 @@ import React from 'react';
 import { Pressable, View, StyleSheet } from 'react-native';
 import ChalmersText from './ChalmersText';
 import { colors, spacing, radii } from '../theme/theme';
+import { useTheme } from '../theme/ThemeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { EvaluationNotification } from '../types/evaluation';
 
 export interface NotificationItemProps {
@@ -18,34 +20,39 @@ export interface NotificationItemProps {
   onPress: (notification: EvaluationNotification) => void;
 }
 
-function formatTimestamp(iso: string): string {
-  const date = new Date(iso);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-
-  if (diffHours < 1) return 'Just now';
-  if (diffHours < 24) return `${diffHours}h ago`;
-
-  const diffDays = Math.floor(diffHours / 24);
-  return `${diffDays}d ago`;
-}
-
 const NotificationItem: React.FC<NotificationItemProps> = ({
   notification,
   onPress,
 }) => {
   const { title, body, created_at, is_read } = notification;
+  const theme = useTheme();
+  const { t } = useI18n();
+
+  const formatTimestamp = (iso: string): string => {
+    const date = new Date(iso);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+    if (diffHours < 1) return t.notifJustNow;
+    if (diffHours < 24) return t.notifHoursAgo(diffHours);
+
+    const diffDays = Math.floor(diffHours / 24);
+    return t.notifDaysAgo(diffDays);
+  };
 
   return (
     <Pressable
       onPress={() => onPress(notification)}
       style={({ pressed }) => [
         styles.container,
-        pressed && styles.pressed,
+        { backgroundColor: pressed ? theme.pressed : theme.card },
       ]}
       accessibilityRole="button"
-      accessibilityLabel={`${title}. ${is_read ? 'Read' : 'Unread'} notification.`}
+      accessibilityLabel={t.notifAccessibilityLabel(
+        title,
+        is_read ? t.notifRead : t.notifUnread,
+      )}
     >
       <View style={styles.indicatorColumn}>
         {!is_read && <View style={styles.unreadDot} />}
@@ -60,13 +67,13 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         </ChalmersText>
         <ChalmersText
           variant="paragraph2"
-          color={colors.varmGra}
+          color={theme.subText}
           style={styles.body}
           numberOfLines={2}
         >
           {body}
         </ChalmersText>
-        <ChalmersText variant="caption2" color={colors.varmGra} style={styles.timestamp}>
+        <ChalmersText variant="caption2" color={theme.subText} style={styles.timestamp}>
           {formatTimestamp(created_at)}
         </ChalmersText>
       </View>
@@ -80,10 +87,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.md,
     borderRadius: radii.sm,
-    backgroundColor: colors.white,
-  },
-  pressed: {
-    backgroundColor: '#F5F9FC',
   },
   indicatorColumn: {
     width: 12,
