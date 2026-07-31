@@ -59,9 +59,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       </View>
 
       <View style={styles.content}>
+        <ChalmersText variant="caption2" color={theme.subText}>
+          {formatTimestamp(created_at)}
+        </ChalmersText>
         <ChalmersText
           variant="heading2"
-          style={!is_read ? styles.unreadTitle : undefined}
+          style={!is_read ? styles.unreadTitle : styles.title}
         >
           {title}
         </ChalmersText>
@@ -72,9 +75,6 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           numberOfLines={2}
         >
           {body}
-        </ChalmersText>
-        <ChalmersText variant="caption2" color={theme.subText} style={styles.timestamp}>
-          {formatTimestamp(created_at)}
         </ChalmersText>
       </View>
     </Pressable>
@@ -102,14 +102,15 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
+  title: {
+    marginTop: spacing.xs,
+  },
   unreadTitle: {
     fontFamily: 'OpenSans-Bold',
+    marginTop: spacing.xs,
   },
   body: {
     marginTop: spacing.xs / 2,
-  },
-  timestamp: {
-    marginTop: spacing.xs,
   },
 });
 

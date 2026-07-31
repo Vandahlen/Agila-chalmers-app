@@ -33,7 +33,6 @@ import ChalmersText from './src/weekly-evaluation/components/ChalmersText';
 import { createSupabaseEvaluationRepository } from './src/weekly-evaluation/services/SupabaseEvaluationRepository';
 import { EvaluationNotification } from './src/weekly-evaluation/types/evaluation';
 import { postgrest } from './src/config/supabase';
-import { colors } from './src/weekly-evaluation/theme/theme';
 import { ThemeProvider, useTheme } from './src/weekly-evaluation/theme/ThemeContext';
 import { I18nProvider, useI18n } from './src/weekly-evaluation/i18n/I18nContext';
 import ErrorBoundary from './src/components/ErrorBoundary';
@@ -51,7 +50,7 @@ interface NotificationCore {
 function AppContent(): React.JSX.Element {
   const isDark = useColorScheme() === 'dark';
   const theme = useTheme();
-  const { t, toggleLang } = useI18n();
+  const { t, lang, toggleLang } = useI18n();
 
   const [step, setStep] = useState<FlowStep>('feed');
   const [notifications, setNotifications] = useState<NotificationCore[]>([
@@ -97,9 +96,17 @@ function AppContent(): React.JSX.Element {
           <>
             <View style={styles.headerRow}>
               <ChalmersText variant="heading1">{t.introTitle}</ChalmersText>
-              <TouchableOpacity onPress={toggleLang} accessibilityRole="button">
-                <ChalmersText variant="paragraph1" color={colors.bla}>
-                  {t.demoLangToggle}
+              <TouchableOpacity
+                onPress={toggleLang}
+                style={styles.langToggle}
+                accessibilityRole="button"
+                accessibilityLabel={t.demoLangToggle}
+              >
+                <ChalmersText style={lang !== 'en' ? styles.langFlagInactive : undefined}>
+                  {'\u{1F1EC}\u{1F1E7}'}
+                </ChalmersText>
+                <ChalmersText style={lang !== 'sv' ? styles.langFlagInactive : undefined}>
+                  {'\u{1F1F8}\u{1F1EA}'}
                 </ChalmersText>
               </TouchableOpacity>
             </View>
@@ -159,6 +166,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 8,
+  },
+  langToggle: {
+    flexDirection: 'row',
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+  },
+  langFlagInactive: {
+    opacity: 0.35,
   },
   feed: {
     flex: 1,

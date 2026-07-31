@@ -50,6 +50,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
   const {
     loadState,
     questions,
+    currentStep,
     currentQuestion,
     isLastStep,
     currentAnswer,
@@ -153,7 +154,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
       <View style={styles.footer}>
         <ChalmersButton
-          label={t.surveyBack}
+          label={`${currentStep === 0 ? '✕' : '←'} ${t.surveyBack}`}
           onPress={() => goBack(onCancel)}
           variant="secondary"
         />
