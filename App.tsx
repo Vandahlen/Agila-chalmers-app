@@ -30,6 +30,8 @@ import NotificationItem from './src/weekly-evaluation/components/NotificationIte
 import EvaluationIntroCard from './src/weekly-evaluation/components/EvaluationIntroCard';
 import WeeklyEvaluationScreen from './src/weekly-evaluation/screens/WeeklyEvaluationScreen';
 import ChalmersText from './src/weekly-evaluation/components/ChalmersText';
+import FlagUK from './src/weekly-evaluation/components/FlagUK';
+import FlagSE from './src/weekly-evaluation/components/FlagSE';
 import { createSupabaseEvaluationRepository } from './src/weekly-evaluation/services/SupabaseEvaluationRepository';
 import { EvaluationNotification } from './src/weekly-evaluation/types/evaluation';
 import { postgrest } from './src/config/supabase';
@@ -102,12 +104,8 @@ function AppContent(): React.JSX.Element {
                 accessibilityRole="button"
                 accessibilityLabel={t.demoLangToggle}
               >
-                <ChalmersText style={lang !== 'en' ? styles.langFlagInactive : undefined}>
-                  {'\u{1F1EC}\u{1F1E7}'}
-                </ChalmersText>
-                <ChalmersText style={lang !== 'sv' ? styles.langFlagInactive : undefined}>
-                  {'\u{1F1F8}\u{1F1EA}'}
-                </ChalmersText>
+                <FlagUK style={lang !== 'en' ? styles.langFlagInactive : undefined} />
+                <FlagSE style={lang !== 'sv' ? styles.langFlagInactive : undefined} />
               </TouchableOpacity>
             </View>
             <FlatList
