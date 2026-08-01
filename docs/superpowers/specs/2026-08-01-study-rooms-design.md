@@ -11,36 +11,55 @@ mock data; swapping in real TimeEdit data later touches exactly one file.
 
 ## Module structure
 
-Mirrors the existing `weekly-evaluation` module's pattern (standalone,
-swappable repository, shared theme/i18n):
+Lives in its own top-level folder, `Karappen/study-rooms/`, as a sibling
+to the `agila` app rather than inside it. It follows the same internal
+pattern as `agila/src/weekly-evaluation` (standalone, swappable
+repository) but is a self-contained package: its own `package.json`,
+`tsconfig.json`, `babel.config.js`, and `jest.config.js`, so it
+type-checks and tests independently of `agila`. It is not wired into
+the `agila` app or built as a runnable RN app on its own (no
+`android`/`ios`/entry point) — it's the feature module, ready to be
+dropped into whichever host app integrates it.
 
 ```
-src/study-rooms/
-├── types/
-│   └── studyRoom.ts               # StudyRoom type, IStudyRoomRepository interface
-├── services/
-│   ├── MockStudyRoomRepository.ts # reads fixtures/rooms.json
-│   └── fixtures/
-│       └── rooms.json             # editable mock room list
-├── hooks/
-│   └── useStudyRooms.ts           # fetch + filter + sort state
+study-rooms/
+├── package.json / tsconfig.json / babel.config.js / jest.config.js / jest.setup.js
+├── theme/
+│   ├── theme.ts                    # copied from weekly-evaluation's theme tokens
+│   └── ThemeContext.tsx
+├── i18n/
+│   ├── translations.ts             # only this module's studyRooms* copy (EN/SV)
+│   └── I18nContext.tsx
 ├── components/
-│   ├── RoomCard.tsx               # one row: name, building, free-until/static, size, whiteboard, shared badge, book link
-│   ├── FilterBar.tsx              # search + building/size/whiteboard filters, sort control
-│   └── TabSwitcher.tsx            # "Group rooms" / "Open areas" toggle
+│   ├── ChalmersText.tsx            # copied typography primitive
+│   ├── ChalmersButton.tsx          # copied button primitive
+│   ├── RoomCard.tsx                # one row: name, building, free-until/static, size, whiteboard, shared badge, book link
+│   ├── FilterBar.tsx               # search + building/size/whiteboard filters, sort control
+│   └── TabSwitcher.tsx             # "Group rooms" / "Open areas" toggle
+├── types/
+│   └── studyRoom.ts                # StudyRoom type, IStudyRoomRepository interface
+├── services/
+│   ├── roomFilters.ts              # pure filter/sort logic
+│   ├── MockStudyRoomRepository.ts  # reads fixtures/rooms.json
+│   └── fixtures/
+│       └── rooms.json              # editable mock room list
+├── hooks/
+│   └── useStudyRooms.ts            # fetch + filter + sort state
 ├── screens/
-│   └── StudyRoomsScreen.tsx       # top-level screen, owns tab + filter state
+│   └── StudyRoomsScreen.tsx        # top-level screen, owns tab + filter state
 └── example/
-    └── ExampleUsage.tsx           # standalone wiring demo, like weekly-evaluation's
+    └── ExampleUsage.tsx            # standalone wiring demo
 ```
 
-The module imports the **existing** `ThemeContext` and `I18nContext` from
-`src/weekly-evaluation/theme` and `src/weekly-evaluation/i18n` rather than
-duplicating them — those providers already wrap the whole app in
-`App.tsx`, they're not evaluation-specific. No new npm dependencies. No
-navigation library exists in this app, so — same as `weekly-evaluation` —
-this stays a standalone screen the host app wires in later; it is not
-bolted onto the real `App.tsx`.
+Because Metro only bundles within a project's own root, this module
+cannot import `agila/src/weekly-evaluation`'s theme/i18n across the
+folder boundary — the small pieces it needs (brand color/type tokens,
+the theme/i18n context providers, `ChalmersText`/`ChalmersButton`) are
+copied in rather than shared. This trades a small amount of duplication
+now for a module that builds and tests standalone; `translations.ts`
+here only carries this module's own `studyRooms*` keys, not the
+evaluation module's unrelated copy. No new *kinds* of dependency are
+introduced — same React/React Native/async-storage versions as `agila`.
 
 ## Data model & repository (the TimeEdit seam)
 
