@@ -29,13 +29,10 @@ import {
 import NotificationItem from './src/weekly-evaluation/components/NotificationItem';
 import EvaluationIntroCard from './src/weekly-evaluation/components/EvaluationIntroCard';
 import WeeklyEvaluationScreen from './src/weekly-evaluation/screens/WeeklyEvaluationScreen';
-import ChalmersText from './src/weekly-evaluation/components/ChalmersText';
-import FlagUK from './src/weekly-evaluation/components/FlagUK';
-import FlagSE from './src/weekly-evaluation/components/FlagSE';
 import { createSupabaseEvaluationRepository } from './src/weekly-evaluation/services/SupabaseEvaluationRepository';
 import { EvaluationNotification } from './src/weekly-evaluation/types/evaluation';
 import { postgrest } from './src/config/supabase';
-import { ThemeProvider, useTheme } from './src/weekly-evaluation/theme/ThemeContext';
+import { ChalmersText, FlagUK, FlagSE, ThemeProvider, useTheme } from 'kar-ui-kit';
 import { I18nProvider, useI18n } from './src/weekly-evaluation/i18n/I18nContext';
 import ErrorBoundary from './src/components/ErrorBoundary';
 

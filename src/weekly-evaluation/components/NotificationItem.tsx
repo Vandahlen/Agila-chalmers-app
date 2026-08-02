@@ -9,9 +9,7 @@
 
 import React from 'react';
 import { Pressable, View, StyleSheet } from 'react-native';
-import ChalmersText from './ChalmersText';
-import { colors, spacing, radii } from '../theme/theme';
-import { useTheme } from '../theme/ThemeContext';
+import { ChalmersText, colors, spacing, radii, useTheme } from 'kar-ui-kit';
 import { useI18n } from '../i18n/I18nContext';
 import { EvaluationNotification } from '../types/evaluation';
 

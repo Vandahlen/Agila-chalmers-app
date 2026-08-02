@@ -7,9 +7,7 @@
 
 import React from 'react';
 import { Pressable, StyleSheet, TextInput, View, Vibration } from 'react-native';
-import ChalmersText from './ChalmersText';
-import { colors, radii, spacing } from '../theme/theme';
-import { useTheme } from '../theme/ThemeContext';
+import { ChalmersText, colors, radii, spacing, useTheme } from 'kar-ui-kit';
 import { useI18n } from '../i18n/I18nContext';
 import { Question } from '../types/evaluation';
 

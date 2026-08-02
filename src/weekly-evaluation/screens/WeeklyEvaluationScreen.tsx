@@ -15,11 +15,8 @@
 
 import React from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator, Vibration } from 'react-native';
-import ChalmersText from '../components/ChalmersText';
-import ChalmersButton from '../components/ChalmersButton';
+import { ChalmersText, ChalmersButton, colors, spacing, useTheme } from 'kar-ui-kit';
 import QuestionInput from '../components/QuestionInput';
-import { colors, spacing } from '../theme/theme';
-import { useTheme } from '../theme/ThemeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { IEvaluationRepository } from '../types/evaluation';
 import { useWeeklyEvaluation, StudentContext } from '../hooks/useWeeklyEvaluation';

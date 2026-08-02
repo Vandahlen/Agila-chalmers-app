@@ -8,10 +8,7 @@
 
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import ChalmersText from './ChalmersText';
-import ChalmersButton from './ChalmersButton';
-import { colors, spacing, radii } from '../theme/theme';
-import { useTheme } from '../theme/ThemeContext';
+import { ChalmersText, ChalmersButton, colors, spacing, radii, useTheme } from 'kar-ui-kit';
 import { useI18n } from '../i18n/I18nContext';
 
 export interface EvaluationIntroCardProps {

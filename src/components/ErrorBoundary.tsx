@@ -14,10 +14,7 @@
 
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import ChalmersText from '../weekly-evaluation/components/ChalmersText';
-import ChalmersButton from '../weekly-evaluation/components/ChalmersButton';
-import { spacing } from '../weekly-evaluation/theme/theme';
-import { useTheme } from '../weekly-evaluation/theme/ThemeContext';
+import { ChalmersText, ChalmersButton, spacing, useTheme } from 'kar-ui-kit';
 import { useI18n } from '../weekly-evaluation/i18n/I18nContext';
 
 interface ErrorBoundaryProps {
