@@ -117,12 +117,10 @@ blocks for `styled-components` without changing any public props.
 
 ## Known gaps / extension points
 
-- `QuestionInput`'s `text` branch is a placeholder - wire in a
-  `TextInput` if you add free-text questions.
 - No offline queueing: a failed submit surfaces an inline error and
   lets the student retry; add a queue/retry layer if offline support
-  is required.
-- No i18n layer - all copy is in English; the profile's icon set
-  includes a language switcher (`Språk`) suggesting the host app
-  already has one, so this module should read from it rather than
-  duplicating it.
+  is required. (Tracked separately - see the features-and-coverage plan.)
+- No auth/session identity is threaded through `IEvaluationRepository`
+  - `SupabaseEvaluationRepository` takes an already-configured client.
+  A real per-user auth requirement would be new surface on the
+  interface, not something swapping implementations gives for free.
