@@ -42,7 +42,9 @@ jobs:
         run: npm test
 
   ios:
-    runs-on: macos-14
+    # macos-14's default Xcode is 15.4; RN 0.86 requires >=16.1. macos-15
+    # defaults to a current Xcode that satisfies this.
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
         with:
