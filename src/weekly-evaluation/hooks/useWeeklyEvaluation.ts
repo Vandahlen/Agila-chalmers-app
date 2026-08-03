@@ -13,6 +13,7 @@ import {
   Question,
   QuestionAnswer,
 } from '../types/evaluation';
+import { enqueuePayload, flushQueue } from '../services/offlineQueue';
 
 export type LoadState = 'loading' | 'ready' | 'error';
 export type SubmitState = 'idle' | 'submitting' | 'error';
@@ -54,7 +55,8 @@ export function useWeeklyEvaluation({
 
   useEffect(() => {
     loadQuestions();
-  }, [loadQuestions]);
+    flushQueue(repository);
+  }, [loadQuestions, repository]);
 
   const currentQuestion = questions[currentStep];
   const isLastStep = currentStep === questions.length - 1;
@@ -90,6 +92,7 @@ export function useWeeklyEvaluation({
       setSubmitState('idle');
       onEvaluationFinished(notificationId);
     } catch {
+      await enqueuePayload(payload);
       setSubmitState('error');
     }
   }, [answers, notificationId, onEvaluationFinished, repository, studentContext]);
