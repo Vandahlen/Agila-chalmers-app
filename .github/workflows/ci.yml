@@ -84,3 +84,30 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             build \
             CODE_SIGNING_ALLOWED=NO
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: agila
+      - uses: actions/checkout@v4
+        with:
+          repository: Vandahlen/kar-ui-kit
+          path: kar-ui-kit
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - working-directory: kar-ui-kit
+        run: npm ci
+      - working-directory: agila
+        run: npm ci
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      # ubuntu-latest ships the Android SDK/build-tools preinstalled -
+      # assembleDebug compiles the app without needing an emulator.
+      - name: Build debug APK
+        working-directory: agila/android
+        run: ./gradlew assembleDebug --console=plain
