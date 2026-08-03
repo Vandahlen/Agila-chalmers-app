@@ -25,6 +25,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      # kar-ui-kit's own source imports react/react-native/react-native-svg
+      # directly (agila's npm ci only installs agila's own node_modules and
+      # symlinks kar-ui-kit in - it never installs kar-ui-kit's OWN
+      # dependencies). Without this, tsc can't resolve those imports when it
+      # follows the symlink into kar-ui-kit's real source files.
+      - working-directory: kar-ui-kit
+        run: npm ci
       - working-directory: agila
         run: npm ci
       - working-directory: agila
@@ -47,6 +54,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      # kar-ui-kit's own source imports react/react-native/react-native-svg
+      # directly (agila's npm ci only installs agila's own node_modules and
+      # symlinks kar-ui-kit in - it never installs kar-ui-kit's OWN
+      # dependencies). Without this, tsc can't resolve those imports when it
+      # follows the symlink into kar-ui-kit's real source files.
+      - working-directory: kar-ui-kit
+        run: npm ci
       - working-directory: agila
         run: npm ci
       - uses: ruby/setup-ruby@v1
