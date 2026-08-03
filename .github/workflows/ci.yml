@@ -11,31 +11,54 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: agila
+      # kar-ui-kit is consumed via a `file:../kar-ui-kit` dependency, which
+      # only resolves because it's a sibling folder on a local dev machine.
+      # Check it out as a true sibling here too, so npm ci/tsc/eslint/jest
+      # can actually find it - without this, "Cannot find module 'kar-ui-kit'"
+      # is the only possible outcome, since nothing else provides that path.
+      - uses: actions/checkout@v4
+        with:
+          repository: Vandahlen/kar-ui-kit
+          path: kar-ui-kit
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm ci
-      - run: npx tsc --noEmit
-      - run: npx eslint .
-      - run: npm test
+      - working-directory: agila
+        run: npm ci
+      - working-directory: agila
+        run: npx tsc --noEmit
+      - working-directory: agila
+        run: npx eslint .
+      - working-directory: agila
+        run: npm test
 
   ios:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: agila
+      - uses: actions/checkout@v4
+        with:
+          repository: Vandahlen/kar-ui-kit
+          path: kar-ui-kit
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm ci
+      - working-directory: agila
+        run: npm ci
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
           bundler-cache: true
+          working-directory: agila
       - name: Install CocoaPods dependencies
-        working-directory: ios
+        working-directory: agila/ios
         run: bundle exec pod install
       - name: Build for iOS Simulator
-        working-directory: ios
+        working-directory: agila/ios
         run: |
           xcodebuild \
             -workspace agila.xcworkspace \
