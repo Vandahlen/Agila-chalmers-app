@@ -17,3 +17,30 @@ jobs:
       - run: npx tsc --noEmit
       - run: npx eslint .
       - run: npm test
+
+  ios:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Install CocoaPods dependencies
+        working-directory: ios
+        run: bundle exec pod install
+      - name: Build for iOS Simulator
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -workspace agila.xcworkspace \
+            -scheme agila \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            build \
+            CODE_SIGNING_ALLOWED=NO
