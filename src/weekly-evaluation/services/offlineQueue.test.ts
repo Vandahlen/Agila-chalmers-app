@@ -1,6 +1,6 @@
 // src/weekly-evaluation/services/offlineQueue.test.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { enqueuePayload, flushQueue } from './offlineQueue';
+import { enqueuePayload, flushQueue, removeFromQueue } from './offlineQueue';
 import { EvaluationPayload, IEvaluationRepository } from '../types/evaluation';
 
 const payload = (id: string): EvaluationPayload => ({
@@ -56,4 +56,24 @@ test('flushQueue keeps a payload queued if submission fails', async () => {
   expect(count).toBe(0);
   const stored = await AsyncStorage.getItem('weekly-evaluation.offline-queue');
   expect(JSON.parse(stored!)).toHaveLength(1);
+});
+
+test('a later successful retry clears the earlier failed queue entry, avoiding a double submit', async () => {
+  // Simulates: submit fails and queues, student retries and succeeds,
+  // success path removes the stale queued copy so it can't be flushed later.
+  await enqueuePayload(payload('a'));
+  await removeFromQueue('a');
+
+  let calls = 0;
+  const repository: IEvaluationRepository = {
+    getQuestions: async () => [],
+    submitEvaluation: async () => {
+      calls += 1;
+    },
+  };
+
+  const count = await flushQueue(repository);
+
+  expect(count).toBe(0);
+  expect(calls).toBe(0);
 });

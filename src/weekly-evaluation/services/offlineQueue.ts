@@ -24,8 +24,15 @@ async function writeQueue(queue: EvaluationPayload[]): Promise<void> {
 
 export async function enqueuePayload(payload: EvaluationPayload): Promise<void> {
   const queue = await readQueue();
-  queue.push(payload);
-  await writeQueue(queue);
+  const deduped = queue.filter((p) => p.notification_id !== payload.notification_id);
+  deduped.push(payload);
+  await writeQueue(deduped);
+}
+
+/** Removes any queued payload for a notification, e.g. once a later retry succeeds. */
+export async function removeFromQueue(notificationId: string): Promise<void> {
+  const queue = await readQueue();
+  await writeQueue(queue.filter((p) => p.notification_id !== notificationId));
 }
 
 /** Attempts to submit every queued payload once. Returns the count that succeeded. */

@@ -117,9 +117,6 @@ blocks for `styled-components` without changing any public props.
 
 ## Known gaps / extension points
 
-- No offline queueing: a failed submit surfaces an inline error and
-  lets the student retry; add a queue/retry layer if offline support
-  is required. (Tracked separately - see the features-and-coverage plan.)
 - No auth/session identity is threaded through `IEvaluationRepository`
   - `SupabaseEvaluationRepository` takes an already-configured client.
   A real per-user auth requirement would be new surface on the

@@ -13,7 +13,7 @@ import {
   Question,
   QuestionAnswer,
 } from '../types/evaluation';
-import { enqueuePayload, flushQueue } from '../services/offlineQueue';
+import { enqueuePayload, flushQueue, removeFromQueue } from '../services/offlineQueue';
 
 export type LoadState = 'loading' | 'ready' | 'error';
 export type SubmitState = 'idle' | 'submitting' | 'error';
@@ -89,6 +89,7 @@ export function useWeeklyEvaluation({
 
     try {
       await repository.submitEvaluation(payload);
+      await removeFromQueue(notificationId);
       setSubmitState('idle');
       onEvaluationFinished(notificationId);
     } catch {
