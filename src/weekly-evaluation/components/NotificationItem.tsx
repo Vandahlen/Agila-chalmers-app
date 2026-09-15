@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { Pressable, View, StyleSheet } from 'react-native';
-import { ChalmersText, colors, spacing, radii, useTheme } from 'kar-ui-kit';
+import { ChalmersText, spacing, radii, useTheme } from 'kar-ui-kit';
 import { useI18n } from '../i18n/I18nContext';
 import { EvaluationNotification } from '../types/evaluation';
 
@@ -53,7 +53,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       )}
     >
       <View style={styles.indicatorColumn}>
-        {!is_read && <View style={styles.unreadDot} />}
+        {!is_read && (
+          <View style={[styles.unreadDot, { backgroundColor: theme.primary }]} />
+        )}
       </View>
 
       <View style={styles.content}>
@@ -95,7 +97,6 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.bla,
   },
   content: {
     flex: 1,
