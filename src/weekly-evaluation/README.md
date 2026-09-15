@@ -12,42 +12,26 @@ weekly-evaluation/
 ├── types/
 │   └── evaluation.ts                 # Question, EvaluationPayload, IEvaluationRepository
 ├── services/
-│   └── SupabaseEvaluationRepository.ts  # Supabase implementation of IEvaluationRepository
-├── theme/
-│   └── theme.ts                      # Chalmers colors + Open Sans type scale
+│   ├── SupabaseEvaluationRepository.ts  # Supabase implementation of IEvaluationRepository
+│   └── offlineQueue.ts               # AsyncStorage retry queue for failed submits
+├── i18n/
+│   ├── translations.ts               # EN/SV copy for this module
+│   └── I18nContext.tsx               # language state, persisted, defaults to sv
 ├── components/
-│   ├── ChalmersText.tsx              # Typography primitive (Titel/H1/H2/Paragraph/...)
-│   ├── ChalmersButton.tsx            # Primärknapp / Sekundärknapp / Disable states
 │   ├── NotificationItem.tsx          # Feed entry, unread dot, timestamp
-│   └── EvaluationIntroCard.tsx       # Pre-survey explainer + "Start Evaluation"
-├── screens/
-│   └── WeeklyEvaluationScreen.tsx    # Step-by-step survey, submits + fires onEvaluationFinished
-└── example/
-    └── ExampleUsage.tsx              # Illustrative wiring, not a required file
+│   ├── EvaluationIntroCard.tsx       # Pre-survey explainer + "Start Evaluation"
+│   └── QuestionInput.tsx             # scale / single-choice / free-text input
+├── hooks/
+│   └── useWeeklyEvaluation.ts        # question loading, step state, submit
+└── screens/
+    └── WeeklyEvaluationScreen.tsx    # Step-by-step survey, submits + fires onEvaluationFinished
 ```
 
-## Design system
-
-All colors and type sizes come from `theme/theme.ts`, sourced directly
-from the Kårappen graphic profile:
-
-| Token       | Hex       |
-|-------------|-----------|
-| Blå         | `#00ACFF` |
-| Lila        | `#843690` |
-| Röd         | `#D8004D` |
-| Matt röd    | `#F8686D` |
-| Orange      | `#F86600` |
-| Varm grå    | `#634C3D` |
-| Grön        | `#27AD72` |
-| Turkos      | `#7CCDC2` |
-
-Type scale (Open Sans): Titel 30pt, Heading 1 20pt, Heading 2 16pt,
-Subheading 1 11pt, Paragraph 1 16pt, Paragraph 2 13pt, Caption 1/2
-12pt/10pt, Label 10pt. Register the actual Open Sans font files
-(`OpenSans-Regular/Medium/SemiBold/Bold`) via `react-native.config.js`
-/ `npx react-native-asset` - this module only references the family
-names, it doesn't bundle the font files.
+Theming and typography (`ChalmersText`, `ChalmersButton`, colors, spacing,
+`ThemeProvider`/`useTheme`) come from the shared **`kar-ui-kit`** package
+(`file:../kar-ui-kit`), not from files inside this module - there's no local
+`theme/` folder or copied component here. See `kar-ui-kit/README.md` for the
+full Kårappen graphic-profile token table and type scale.
 
 ## Repository pattern (swappable backend)
 
@@ -100,9 +84,9 @@ client entirely.
 
 `WeeklyEvaluationScreen` never touches the notification feed's state
 directly - it only calls `onEvaluationFinished(notificationId)` after
-a successful Supabase write. The host app supplies that callback and
-is responsible for deleting/hiding the notification (see
-`example/ExampleUsage.tsx` for a minimal version).
+a successful Supabase write. The host app (currently `App.tsx`'s demo
+feed) supplies that callback and is responsible for deleting/hiding
+the notification.
 
 ## Dependencies
 
@@ -110,10 +94,9 @@ is responsible for deleting/hiding the notification (see
 npm install @supabase/supabase-js
 ```
 
-`ChalmersButton` / `ChalmersText` use only core `react-native`
-primitives (`Pressable`, `Text`, `StyleSheet`) - no extra styling
-library is required, though you can swap the `StyleSheet.create`
-blocks for `styled-components` without changing any public props.
+Chalmers-branded UI primitives come from `kar-ui-kit`, already a
+dependency of this app (`file:../kar-ui-kit`) - no extra styling
+library is required here.
 
 ## Known gaps / extension points
 
