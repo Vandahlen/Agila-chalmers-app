@@ -32,7 +32,13 @@ import WeeklyEvaluationScreen from './src/weekly-evaluation/screens/WeeklyEvalua
 import { createSupabaseEvaluationRepository } from './src/weekly-evaluation/services/SupabaseEvaluationRepository';
 import { EvaluationNotification } from './src/weekly-evaluation/types/evaluation';
 import { postgrest } from './src/config/supabase';
-import { ChalmersText, FlagUK, FlagSE, ThemeProvider, useTheme } from 'kar-ui-kit';
+import {
+  ChalmersText,
+  FlagUK,
+  FlagSE,
+  ThemeProvider,
+  ChalmersBackground,
+} from 'kar-ui-kit';
 import { I18nProvider, useI18n } from './src/weekly-evaluation/i18n/I18nContext';
 import ErrorBoundary from './src/components/ErrorBoundary';
 
@@ -48,7 +54,6 @@ interface NotificationCore {
 
 function AppContent(): React.JSX.Element {
   const isDark = useColorScheme() === 'dark';
-  const theme = useTheme();
   const { t, lang, toggleLang } = useI18n();
 
   const [step, setStep] = useState<FlowStep>('feed');
@@ -88,7 +93,7 @@ function AppContent(): React.JSX.Element {
 
   return (
     <ErrorBoundary>
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+      <SafeAreaView style={styles.safeArea}>
         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
 
         {step === 'feed' && (
@@ -146,9 +151,11 @@ function AppContent(): React.JSX.Element {
 function App(): React.JSX.Element {
   return (
     <ThemeProvider section="extra">
+      <ChalmersBackground>
       <I18nProvider>
         <AppContent />
       </I18nProvider>
+      </ChalmersBackground>
     </ThemeProvider>
   );
 }

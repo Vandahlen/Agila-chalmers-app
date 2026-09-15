@@ -76,7 +76,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   if (loadState === 'loading') {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+      <View style={styles.centered}>
         <ActivityIndicator color={theme.primary} size="large" />
       </View>
     );
@@ -84,7 +84,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   if (loadState === 'error') {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+      <View style={styles.centered}>
         <ChalmersText variant="paragraph1" color={colors.rod}>
           {t.surveyLoadError}
         </ChalmersText>
@@ -100,7 +100,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   if (questions.length === 0) {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+      <View style={styles.centered}>
         <ChalmersText variant="paragraph1" color={theme.subText}>
           {t.surveyEmpty}
         </ChalmersText>
@@ -110,7 +110,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: theme.background }]}
+      style={styles.container}
       contentContainerStyle={styles.content}
     >
       <ChalmersText variant="subheading1" color={theme.subText}>
