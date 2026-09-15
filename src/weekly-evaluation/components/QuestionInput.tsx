@@ -48,7 +48,7 @@ const QuestionInput: React.FC<QuestionInputProps> = ({
               style={[
                 styles.scalePill,
                 { borderColor: theme.border },
-                selected && { backgroundColor: colors.bla, borderColor: colors.bla },
+                selected && { backgroundColor: theme.primary, borderColor: theme.primary },
               ]}
               accessibilityRole="button"
               accessibilityState={{ selected }}
@@ -78,14 +78,14 @@ const QuestionInput: React.FC<QuestionInputProps> = ({
               style={[
                 styles.choiceRow,
                 { borderColor: theme.border },
-                selected && { borderColor: colors.bla, backgroundColor: theme.selectedTint },
+                selected && { borderColor: theme.primary, backgroundColor: theme.selectedTint },
               ]}
               accessibilityRole="button"
               accessibilityState={{ selected }}
             >
               <ChalmersText
                 variant="paragraph1"
-                color={selected ? colors.bla : theme.text}
+                color={selected ? theme.primary : theme.text}
               >
                 {option}
               </ChalmersText>

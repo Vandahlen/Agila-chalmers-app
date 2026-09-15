@@ -77,7 +77,7 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
   if (loadState === 'loading') {
     return (
       <View style={[styles.centered, { backgroundColor: theme.background }]}>
-        <ActivityIndicator color={colors.bla} size="large" />
+        <ActivityIndicator color={theme.primary} size="large" />
       </View>
     );
   }
@@ -119,7 +119,10 @@ const WeeklyEvaluationScreen: React.FC<WeeklyEvaluationScreenProps> = ({
 
       <View style={[styles.progressTrack, { backgroundColor: theme.border }]}>
         <View
-          style={[styles.progressFill, { width: `${progressRatio * 100}%` }]}
+          style={[
+            styles.progressFill,
+            { width: `${progressRatio * 100}%`, backgroundColor: theme.primary },
+          ]}
         />
       </View>
 
@@ -194,7 +197,6 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: colors.bla,
   },
   questionText: {
     marginBottom: spacing.xs,

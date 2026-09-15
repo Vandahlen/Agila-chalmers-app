@@ -140,9 +140,12 @@ function AppContent(): React.JSX.Element {
   );
 }
 
+// Section drives the accent colour. `extra` is inferred from the karapp's
+// own 'Det lilla extra' tab, not measured - the host should pass its own
+// section when it embeds this module.
 function App(): React.JSX.Element {
   return (
-    <ThemeProvider>
+    <ThemeProvider section="extra">
       <I18nProvider>
         <AppContent />
       </I18nProvider>
