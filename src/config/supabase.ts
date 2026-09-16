@@ -11,6 +11,12 @@
 import { PostgrestClient } from '@supabase/postgrest-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@env';
 
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  throw new Error(
+    'Missing SUPABASE_URL or SUPABASE_ANON_KEY. Copy .env.example to .env and fill in your real values.',
+  );
+}
+
 export const postgrest = new PostgrestClient(`${SUPABASE_URL}/rest/v1`, {
   headers: {
     apikey: SUPABASE_ANON_KEY,

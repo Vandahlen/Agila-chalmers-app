@@ -4,6 +4,12 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
+## Step 0: Configure Supabase
+
+1. Run `supabase/schema.sql` in your project's SQL editor, then add your questions to `evaluation_questions`.
+2. Copy `.env.example` to `.env` and fill in the project URL and **anon** key (Settings -> API).
+3. Start Metro with `--reset-cache` whenever `.env` changes; react-native-dotenv caches the values.
+
 ## Step 1: Start Metro
 
 First, you will need to run **Metro**, the JavaScript build tool for React Native.
